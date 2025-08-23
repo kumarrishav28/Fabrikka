@@ -1,0 +1,5 @@
+# This file is loaded before application.yml to fetch external configuration
+spring:
+  cloud:
+    config:
+      uri: http://config-server:8888

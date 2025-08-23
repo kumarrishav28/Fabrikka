@@ -1,0 +1,28 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/kumarrishav28/config-repo
+          default-label: main # The default branch to pull from
+          clone-on-start: true # Clones the repo on startup
+
+eureka:
+  # Configures how this service interacts with the Eureka discovery server.
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ # Use localhost for local development and debugging.
+    enabled: true
+    fetchRegistry: true
+    registerWithEureka: true
+  instance:
+    hostname: localhost
+    # Explicitly set the instance-id to override the default hostname resolution.
+    # This prevents Spring Cloud from picking up 'host.docker.internal' from the environment if docker desktop is running
+    # and ensures it registers with 'localhost' as you intend.
+    instance-id: ${eureka.instance.hostname}:${spring.application.name}:${server.port}

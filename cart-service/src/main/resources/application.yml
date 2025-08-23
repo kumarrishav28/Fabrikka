@@ -1,0 +1,24 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: cart-service
+  config:
+    import: "optional:configserver:"
+
+# All other configuration is now fetched from the Spring Cloud Config Server.
+# The Eureka client configuration is also fetched from the config server.
+
+---
+# Configuration for the 'local' Spring profile for running outside of Docker
+spring:
+  config:
+    activate:
+      on-profile: "local"
+    # Tells Spring to load our local.env file for secrets (if any are needed)
+    import: "optional:file:./local.env[.properties]"
+  cloud:
+    config:
+      # When running locally, we use localhost to find the config server
+      uri: http://localhost:8888

@@ -1,0 +1,22 @@
+server:
+  port: 9080
+
+spring:
+  application:
+    name: user-service
+  config:
+    import: "optional:configserver:"
+
+# All other configuration is now fetched from the Spring Cloud Config Server.
+
+---
+# Configuration for the 'local' Spring profile for running outside of Docker
+spring:
+  config:
+    activate:
+      on-profile: "local"
+    import: "optional:file:./local.env[.properties]"
+  cloud:
+    config:
+      # When running locally, we use localhost to find the config server
+      uri: http://localhost:8888

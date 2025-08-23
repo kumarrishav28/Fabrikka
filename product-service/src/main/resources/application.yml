@@ -1,0 +1,21 @@
+server:
+  port: 8085
+
+# The application name is used to fetch the correct configuration file (e.g., product-service.yml)
+spring:
+  application:
+    name: product-service
+  config:
+    import: "optional:configserver:"
+
+---
+# Configuration for the 'local' Spring profile for running outside of Docker
+spring:
+  config:
+    activate:
+      on-profile: "local"
+    import: "optional:file:./local.env[.properties]"
+  cloud:
+    config:
+      # When running locally, we use localhost to find the config server
+      uri: http://localhost:8888

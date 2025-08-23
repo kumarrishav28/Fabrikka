@@ -1,0 +1,23 @@
+server:
+  port: 9001
+
+# The application name is used to fetch the correct configuration file (e.g., order-service.yml)
+spring:
+  application:
+    name: order-service
+  config:
+    import: "optional:configserver:"
+
+# All other configuration is now fetched from the Spring Cloud Config Server.
+
+---
+# Configuration for the 'local' Spring profile for running outside of Docker
+spring:
+  config:
+    activate:
+      on-profile: "local"
+    import: "optional:file:./local.env[.properties]"
+  cloud:
+    config:
+      # When running locally, we use localhost to find the config server
+      uri: http://localhost:8888
