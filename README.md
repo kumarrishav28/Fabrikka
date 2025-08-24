@@ -56,52 +56,6 @@ The application follows a **microservices architecture pattern** with the follow
 - **Spring Boot Actuator** - Production-ready features
 - **OpenFeign** - Declarative REST client
 
-## 📸 Screenshots
-
-Below are some visual representations of the Fabrikka platform setup and monitoring:
-
-### Jenkins Pipeline
-![Jenkins Pipeline](./b0136687945a2b9bc91f901896ba8f6b7b5c4c0f.png)
-
-![Jenkins Pipeline Status](./310276ccf8aa7c6f0873b0226677282037774665.png)
-
-### Docker Desktop
-![Docker Desktop](./d6b4fd01aced1b97bd3c8752efe783b5f8e3778a.png)
-
-![Docker Services](./dfb3168110ce3b7708660f191f2812580f9abd9e.png)
-
-### Environment Setup
-![Environment Variables](./634437b5d6623a4ee1ccf8b9fc139e1084565efd.png)
-
-### Service Discovery & Configuration
-![Eureka Dashboard](./675eb483b6f6ef4bc9e628a4a5f67fa8942186eb.png)
-
-![Config Server](./798311919dde7d5e20094929e9480c1e2bf04be0.png)
-
-### Microservices Health Status
-![Product Service](./50934ba5f49cde9e240f4fae42aa409f5b9e3f95.png)
-
-![Order Service](./5d90ef64dd2751f47e52b23038f389efe6417897.png)
-
-![Cart Service](./f23b8657151b368d5e0acfbf7efdfa1e95f001de.png)
-
-![Inventory Service](./b73b9e3570c387410c81d6e7c13a34e385a86a19.png)
-
-![Notification Service](./0eaca62df2aedbc602a6efae20cf940e4fa73ae3.png)
-
-![User Service](./4b8fab6ccc20e216e462e380cd9f352cd8f9d010.png)
-
-![API Gateway](./2e81babbdafd3e7b43e5df31e96b94dc217350ba.png)
-
-![Load Product Service](./26f95bb33f097d22cb9726cc3da977def9babbb9.png)
-
-![Discovery Server](./b3d801dc378ed57dd4300087ee2b7ece4aea0359.png)
-
-### Grafana Loki Dashboard
-![Loki Dashboard](./16ea322570c7ad022228aefccbbaf82785ee1c9b.png)
-
-![Loki Logs Aggregation](./c36542485e7d3dae92926d47a365bddd021b1dea.png)
-
 ## 📋 Prerequisites
 
 Before running this application, ensure you have the following installed:
@@ -308,6 +262,50 @@ Each microservice includes:
 - Service discovery with Eureka
 - Asynchronous processing with RabbitMQ
 - Database per service pattern
+
+## 📸 Screenshots
+
+Below are some visual representations of the Fabrikka platform setup and monitoring:
+
+### Jenkins Pipeline
+<img width="1918" height="996" alt="Image" src="https://github.com/user-attachments/assets/2750cfdc-efe6-46b4-ac6f-e795027e59fd" />
+
+### Docker Desktop
+<img width="1918" height="996" alt="Image" src="https://github.com/user-attachments/assets/2750cfdc-efe6-46b4-ac6f-e795027e59fd" />
+
+<img width="1905" height="852" alt="Image" src="https://github.com/user-attachments/assets/58458384-5f3b-45ed-89a8-ccc19d36f414" />
+
+### Environment Setup
+<img width="497" height="353" alt="Image" src="https://github.com/user-attachments/assets/7612da75-57e3-4ac2-b7a0-ca58e43a17d2" />
+
+### Service Discovery & Configuration
+<img width="1905" height="1010" alt="Image" src="https://github.com/user-attachments/assets/5d4c4ab3-968c-4db4-a420-3b24b1b2e33d" />
+
+### Fabrikka
+<img width="1900" height="1022" alt="Image" src="https://github.com/user-attachments/assets/5e7a2786-e6f1-4181-b5d9-a1c931a2bebd" />
+
+<img width="1912" height="1017" alt="Image" src="https://github.com/user-attachments/assets/50ee8405-824a-40bc-8ddb-51cd94832771" />
+
+<img width="1913" height="1003" alt="Image" src="https://github.com/user-attachments/assets/1d038a0c-f4c5-4766-9735-f4e80d5581d8" />
+
+<img width="1890" height="1007" alt="Image" src="https://github.com/user-attachments/assets/138dc278-cb31-4c1b-8d8f-d2bbd8ab23ef" />
+
+<img width="1915" height="1007" alt="Image" src="https://github.com/user-attachments/assets/857547f7-2ea6-4b9e-9a2a-bd986acfdb5e" />
+
+<img width="1912" height="1010" alt="Image" src="https://github.com/user-attachments/assets/ae09e702-d825-4963-9c5a-87b5fd1682ee" />
+
+<img width="1892" height="1002" alt="Image" src="https://github.com/user-attachments/assets/e0199710-c7d3-4771-bcd1-d51b2188849f" />
+
+<img width="1913" height="1012" alt="Image" src="https://github.com/user-attachments/assets/d8ea8722-8365-4ee4-b59b-1435d16d3a90" />
+
+<img width="1903" height="1012" alt="Image" src="https://github.com/user-attachments/assets/12850fa0-72cb-4a7b-acb9-1a823b1f7921" />
+
+<img width="1917" height="1013" alt="Image" src="https://github.com/user-attachments/assets/b0b4a564-f986-463f-8160-357d80828cb9" />
+
+<img width="1296" height="707" alt="Image" src="https://github.com/user-attachments/assets/657e915b-c2db-4558-9b6b-7b5c2de93e9c" />
+
+### Grafana Loki Dashboard
+<img width="1917" height="1020" alt="Image" src="https://github.com/user-attachments/assets/44a6e171-10bf-48a8-8c8a-7843f134f2b6" />
 
 ## 🤝 Contributing
 
