@@ -24,8 +24,8 @@ pipeline {
     )
     string(
       name: 'IMAGE_TAG',
-      defaultValue: 'latest',
-      description: 'Tag for the Docker image (e.g. v1.0.0)'
+      defaultValue: '0.0.1-SNAPSHOT',
+      description: 'Tag for the Docker image (e.g. 0.0.1-SNAPSHOT)'
     )
     choice(
       name: 'SPRING_PROFILE',

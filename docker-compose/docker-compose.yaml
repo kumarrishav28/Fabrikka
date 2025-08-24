@@ -26,6 +26,14 @@ services:
       loki:
         aliases:
           - loki
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   write:
     image: grafana/loki:2.9.5
@@ -45,6 +53,14 @@ services:
       - minio
     networks:
       <<: *loki-dns
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   alloy:
     image: grafana/alloy:v1.0.0
@@ -58,9 +74,18 @@ services:
       - gateway
     networks:
       - loki
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   minio:
-    image: minio/minio:RELEASE.2024-01-25T05-56-59Z
+    platform: linux/amd64 # Explicitly set the platform to avoid architecture issues
+    image: minio/minio:RELEASE.2025-07-23T15-54-02Z # Updated to latest available version
     entrypoint:
       - sh
       - -euc
@@ -84,6 +109,14 @@ services:
       retries: 5
     networks:
       - loki
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   prometheus:
     image: prom/prometheus:v2.51.2
@@ -106,6 +139,14 @@ services:
     networks:
       - loki
       - Fabrikka
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   grafana:
     image: grafana/grafana:10.4.1
@@ -128,6 +169,14 @@ services:
       retries: 5
     networks:
       - loki
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   backend:
     image: grafana/loki:2.9.5
@@ -141,6 +190,14 @@ services:
       - gateway
     networks:
       - loki
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   gateway:
     image: nginx:1.25.4
@@ -160,6 +217,14 @@ services:
       retries: 5
     networks:
       - loki
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   api-gateway:
     image: ${DOCKER_USER}/api-gateway:${SERVICE_VERSION}
@@ -182,6 +247,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   discovery-server:
     # The discovery-server should not depend on the config-server to avoid circular dependencies
@@ -196,8 +269,16 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
       interval: 10s
-      timeout: 5s
+      timeout: 30s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   config-server:
     image: ${DOCKER_USER}/config-server:${SERVICE_VERSION}
@@ -219,8 +300,16 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
       interval: 10s
-      timeout: 5s
+      timeout: 30s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   user-service:
     image: ${DOCKER_USER}/user-service:${SERVICE_VERSION}
@@ -239,6 +328,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   product-service:
     image: ${DOCKER_USER}/product-service:${SERVICE_VERSION}
@@ -259,6 +356,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   order-service:
     image: ${DOCKER_USER}/order-service:${SERVICE_VERSION}
@@ -279,6 +384,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   notification-service:
     image: ${DOCKER_USER}/notification-service:${SERVICE_VERSION}
@@ -305,6 +418,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   inventory-service:
     image: ${DOCKER_USER}/inventory-service:${SERVICE_VERSION}
@@ -325,6 +446,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   load-product:
     image: ${DOCKER_USER}/load-product:${SERVICE_VERSION}
@@ -348,6 +477,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   cart-service:
     image: ${DOCKER_USER}/cart-service:${SERVICE_VERSION}
@@ -369,12 +506,20 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   rabbitmq:
     image: rabbitmq:3.13-management
     container_name: rabbitmq
     ports:
-      - "5672:5672"   # AMQP port for applications
+      - "5672:5672" # AMQP port for applications
       - "15672:15672" # Management UI port
     environment:
       # Use variables from the .env file
@@ -387,3 +532,11 @@ services:
       retries: 5
     networks:
       - Fabrikka
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
