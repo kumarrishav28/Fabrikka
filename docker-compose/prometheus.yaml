@@ -4,38 +4,28 @@ global:
 
 scrape_configs:
   - job_name: 'api-gateway'
+    # This job scrapes the API Gateway statically as it's a critical entry point.
     metrics_path: '/actuator/prometheus'
     static_configs:
       - targets: [ 'api-gateway:8084' ]
-  - job_name: 'cart-service'
-    metrics_path: '/actuator/prometheus'
-    static_configs:
-      - targets: [ 'cart-service:9000' ]
-  - job_name: 'discovery-server'
-    metrics_path: '/actuator/prometheus'
-    static_configs:
-      - targets: [ 'discovery-server:8761' ]
-  - job_name: 'inventory-service'
-    metrics_path: '/actuator/prometheus'
-    static_configs:
-      - targets: [ 'inventory-service:8086' ]
-  - job_name: 'load-product-service'
-    metrics_path: '/actuator/prometheus'
-    static_configs:
-      - targets: [ 'load-product-service:9191' ]
-  - job_name: 'notification-service'
-    metrics_path: '/actuator/prometheus'
-    static_configs:
-      - targets: [ 'notification-service:8082' ]
-  - job_name: 'order-service'
-    metrics_path: '/actuator/prometheus'
-    static_configs:
-      - targets: [ 'order-service:9001' ]
-  - job_name: 'product-service'
-    metrics_path: '/actuator/prometheus'
-    static_configs:
-      - targets: [ 'product-service:8085' ]
-  - job_name: 'user-service'
-    metrics_path: '/actuator/prometheus'
-    static_configs:
-      - targets: [ 'user-service:9080' ]
+
+  - job_name: 'spring-boot-services'
+    # Use Eureka for dynamic service discovery
+    eureka_sd_configs:
+      - server: 'http://discovery-server:8761/eureka'
+    relabel_configs:
+      # 1. Keep only instances that have the 'prometheus.io/scrape=true' metadata
+      - source_labels: [__meta_eureka_app_instance_metadata_prometheus_io_scrape]
+        action: keep
+        regex: true
+      # 2. Use the application name from Eureka as the job label
+      - source_labels: [__meta_eureka_app_name]
+        target_label: job
+      # 3. Set the scrape path from metadata, defaulting to /actuator/prometheus
+      - source_labels: [__meta_eureka_app_instance_metadata_prometheus_io_path]
+        target_label: __metrics_path__
+        regex: (.+)
+      # 4. Use the instance's IP and port for the scrape address
+      - source_labels: [__meta_eureka_app_instance_ip_addr, __meta_eureka_app_instance_port]
+        target_label: __address__
+        replacement: $1:$2

@@ -39,6 +39,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/h2-console/**").permitAll() // Allow access to H2 console
                                 .requestMatchers("/users").hasRole("ADMIN")
                                 .requestMatchers("/index","/").authenticated()
+                                .requestMatchers("/actuator/**").permitAll()
                                 .anyRequest().authenticated()).formLogin(formLogin ->
                         formLogin.loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/index",true).permitAll())
         .logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll()

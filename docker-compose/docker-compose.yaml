@@ -20,7 +20,7 @@ services:
     healthcheck:
       test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1" ]
       interval: 10s
-      timeout: 5s
+      timeout: 30s
       retries: 5
     networks: &loki-dns
       loki:
@@ -47,7 +47,7 @@ services:
     healthcheck:
       test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1" ]
       interval: 10s
-      timeout: 5s
+      timeout: 30s
       retries: 5
     depends_on:
       - minio
@@ -105,7 +105,7 @@ services:
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
       interval: 15s
-      timeout: 20s
+      timeout: 30s
       retries: 5
     networks:
       - loki
@@ -165,7 +165,7 @@ services:
     healthcheck:
       test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1" ]
       interval: 10s
-      timeout: 5s
+      timeout: 30s
       retries: 5
     networks:
       - loki
@@ -213,7 +213,7 @@ services:
       # This healthcheck correctly verifies if NGINX is responsive
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3100/"]
       interval: 10s
-      timeout: 5s
+      timeout: 30s
       retries: 5
     networks:
       - loki
@@ -234,6 +234,9 @@ services:
       SPRING_APPLICATION_NAME: api-gateway
       # Aligning with other services to use the 'dev' profile from the config server
       SPRING_PROFILES_ACTIVE: dev
+      # Explicitly set service discovery and config server URLs for container networking
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -244,9 +247,9 @@ services:
       - Fabrikka
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 30s
+      timeout: 300s
+      retries: 10
     deploy:
       resources:
         limits:
@@ -264,13 +267,16 @@ services:
     environment:
       SPRING_APPLICATION_NAME: discovery-server
       SPRING_PROFILES_ACTIVE: dev
+      # Best practice: prevent Eureka server from registering with itself
+      EUREKA_CLIENT_REGISTERWITHEUREKA: "false"
+      EUREKA_CLIENT_FETCHREGISTRY: "false"
     networks:
       - Fabrikka
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
-      interval: 10s
-      timeout: 30s
-      retries: 5
+      interval: 30s
+      timeout: 300s
+      retries: 10
     deploy:
       resources:
         limits:
@@ -284,14 +290,11 @@ services:
     image: ${DOCKER_USER}/config-server:${SERVICE_VERSION}
     ports:
       - "8888:8888"
-    volumes:
-      # Mount the local config repo into the container
-      - ../config-repo:/config-repo
     environment:
       SPRING_APPLICATION_NAME: config-server
-      SPRING_PROFILES_ACTIVE: native # Use the native profile in Docker
-      # Override the search location to use the path inside the container
-      SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCHLOCATIONS: file:/config-repo
+      SPRING_PROFILES_ACTIVE: dev # Use the 'dev' profile to enable Git configuration
+      # Explicitly set service discovery URL for container networking
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -299,9 +302,9 @@ services:
       - Fabrikka
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
-      interval: 10s
-      timeout: 30s
-      retries: 5
+      interval: 30s
+      timeout: 300s
+      retries: 10
     deploy:
       resources:
         limits:
@@ -318,6 +321,9 @@ services:
     environment:
       SPRING_APPLICATION_NAME: user-service
       SPRING_PROFILES_ACTIVE: dev
+      # Explicitly set service discovery and config server URLs for container networking
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
     depends_on:
       discovery-server: { condition: service_healthy }
       config-server: { condition: service_healthy }
@@ -325,9 +331,9 @@ services:
       - Fabrikka
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9080/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 30s
+      timeout: 300s
+      retries: 10
     deploy:
       resources:
         limits:
@@ -344,6 +350,9 @@ services:
     environment:
       SPRING_APPLICATION_NAME: product-service
       SPRING_PROFILES_ACTIVE: dev
+      # Explicitly set service discovery and config server URLs for container networking
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -353,9 +362,9 @@ services:
       - Fabrikka
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 30s
+      timeout: 300s
+      retries: 10
     deploy:
       resources:
         limits:
@@ -372,6 +381,9 @@ services:
     environment:
       SPRING_APPLICATION_NAME: order-service
       SPRING_PROFILES_ACTIVE: dev
+      # Explicitly set service discovery and config server URLs for container networking
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -381,9 +393,9 @@ services:
       - Fabrikka
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9001/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 30s
+      timeout: 300s
+      retries: 10
     deploy:
       resources:
         limits:
@@ -400,6 +412,9 @@ services:
     environment:
       SPRING_APPLICATION_NAME: notification-service
       SPRING_PROFILES_ACTIVE: dev
+      # Explicitly set service discovery and config server URLs for container networking
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
       # Inject secrets for RabbitMQ
       SPRING_RABBITMQ_USERNAME: ${RABBITMQ_USER}
       SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASS}
@@ -415,9 +430,9 @@ services:
       - Fabrikka
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 30s
+      timeout: 300s
+      retries: 10
     deploy:
       resources:
         limits:
@@ -434,6 +449,9 @@ services:
     environment:
       SPRING_APPLICATION_NAME: inventory-service
       SPRING_PROFILES_ACTIVE: dev
+      # Explicitly set service discovery and config server URLs for container networking
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -443,9 +461,9 @@ services:
       - Fabrikka
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8086/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 30s
+      timeout: 300s
+      retries: 10
     deploy:
       resources:
         limits:
@@ -462,6 +480,9 @@ services:
     environment:
       SPRING_APPLICATION_NAME: load-product
       SPRING_PROFILES_ACTIVE: dev
+      # Explicitly set service discovery and config server URLs for container networking
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
       # Inject secrets for RabbitMQ
       SPRING_RABBITMQ_USERNAME: ${RABBITMQ_USER}
       SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASS}
@@ -474,9 +495,9 @@ services:
       - Fabrikka
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9191/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 30s
+      timeout: 300s
+      retries: 10
     deploy:
       resources:
         limits:
@@ -494,6 +515,9 @@ services:
     environment:
       SPRING_APPLICATION_NAME: cart-service
       SPRING_PROFILES_ACTIVE: dev
+      # Explicitly set service discovery and config server URLs for container networking
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -503,9 +527,9 @@ services:
       - Fabrikka
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 30s
+      timeout: 300s
+      retries: 10
     deploy:
       resources:
         limits:
@@ -528,8 +552,8 @@ services:
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "ping", "-q"]
       interval: 30s
-      timeout: 10s
-      retries: 5
+      timeout: 300s
+      retries: 10
     networks:
       - Fabrikka
     deploy:
